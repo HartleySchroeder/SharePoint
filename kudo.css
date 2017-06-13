@@ -1,0 +1,201 @@
+body{
+	font-family: "Tahoma";
+}
+.red {
+	color: red;
+}
+.blue {
+	color: blue;
+}
+.green {
+	color: green;
+}
+.purple {
+	color: purple;
+}
+.brown {
+	color: brown;
+}
+.CadetBlue {
+	color: CadetBlue;
+}
+.DarkOrange {
+	color: DarkOrange;
+}
+.GoldenRod {
+	color: GoldenRod;
+}
+.MediumVioletRed {
+	color: MediumVioletRed;
+}
+.MediumSeaGreen {
+	color: MediumSeaGreen;
+}
+.teal {
+	color: teal;
+}
+.DarkOrchid {
+	color: DarkOrchid;
+}
+.align1 {
+	padding-left: 2%;
+	padding-top: 2%;
+}
+.align2 {
+	padding-left: 4%;
+	padding-top: 4%;
+}
+.align3 {
+	padding-left: 6%;
+	padding-top: 6%;
+}
+.align4 {
+	padding-left: 8%;
+	padding-top: 8%;
+}
+.align5 {
+	padding-left: 10%;
+	padding-top: 10%;
+}
+.light {
+	font-weight: 300;
+}
+.lighter {
+	font-weight: 200;
+}
+.normal {
+	font-weight: 400;
+}
+.bold {
+	font-weight: 500;
+}
+.bolder {
+	font-weight: 600;
+}
+.rotate7 {
+	-webkit-transform: rotate(7deg);
+	transform: rotate(7deg);
+}
+.rotateNeg10 {
+	-webkit-transform: rotate(-10deg);
+	transform: rotate(-10deg);
+}
+.rotateNeg12 {
+	-webkit-transform: rotate(-12deg);
+	transform: rotate(-12deg);
+}
+.rotate4 {
+	-webkit-transform: rotate(4deg);
+	transform: rotate(4deg);
+}
+.rotate2 {
+	-webkit-transform: rotate(2deg);
+	transform: rotate(2deg);
+}
+.rotateNeg7 {
+	-webkit-transform: rotate(-7deg);
+	transform: rotate(-7deg);
+}
+.rotate10 {
+	-webkit-transform: rotate(10deg);
+	transform: rotate(10deg);
+}
+.rotate12 {
+	-webkit-transform: rotate(12deg);
+	transform: rotate(12deg);
+}
+.rotateNeg4 {
+	-webkit-transform: rotate(-4deg);
+	transform: rotate(-4deg);
+}
+.rotateNeg2 {
+	-webkit-transform: rotate(-2deg);
+	transform: rotate(-2deg);
+}
+.font24 {
+	font-size: 24px;
+}
+.font26 {
+	font-size: 26px;
+}
+.font28 {
+	font-size: 28px;
+}
+.fontFamily1 {
+	font-family: "Brush Script MT";
+}
+.fontFamily2 {
+	font-family: "Lucida";
+}
+.fontFamily3 {
+	font-family: "Palatino";
+}
+.fontFamily4 {
+	font-family: "Segoe UI";
+}
+.fontFamily5 {
+	font-family: "Papyrus";
+}
+table {
+	width: 100%;
+	position: relative;
+}
+td {
+	padding-left: 15px;
+	height: 300px;
+	width: 400px;
+}
+.limit_width {
+	width: 75%;
+}
+.border {
+	border-style: outset;
+	border-width: 20px;
+	border-color: LightGrey;
+	box-shadow: 5px 5px LightGrey;
+	height: 600px;
+	width: 1200px;
+}
+#contentwrapper{
+  position: relative;
+  overflow: hidden;
+  -webkit-transform: translate3d(0, 0, 0);
+		  transform: translate3d(0, 0, 0);
+  -ms-transform: translate3d(0, 0, 0);
+  -o-transform: translate3d(0, 0, 0);
+}
+#inner-wrapper{
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+#scrollTable {
+	background-color: #FEFEFE;
+	margin-left: 20px;
+}
+#eraser{
+	position: absolute;
+	height: 20px;
+	width: 100px;
+	bottom: 0px;
+	right: 100px;
+	background-color: blue;
+	border-radius: 5px 5px 0 0;
+	border-bottom: 6px solid LightGrey;
+}
+#red-pen{
+	position: absolute;
+	height: 5px;
+	width: 80px;
+	bottom: 0px;
+	right: 250px;
+	background-color: red;
+}
+#blue-pen{
+	position: absolute;
+	height: 5px;
+	width: 80px;
+	bottom: 0px;
+	right: 350px;
+	background-color: green;
+}

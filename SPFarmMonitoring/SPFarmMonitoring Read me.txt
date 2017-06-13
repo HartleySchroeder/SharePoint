@@ -1,0 +1,14 @@
+Now,follow below steps to execute the script in order to get the Farm Report in your mailbox.
+Create two folders in C drive as named follow:
+Scripts
+Reports
+
+Store SPFarmMonitoring.Ps1 and SharePointLicenses.xml in Scripts folder under C Drive.
+Store style.CSS in C drive.
+Store emailBody.html file in Reports folder.
+Open PowerShell Management Shell and go to C:\ Scripts location.
+Type “.\SPFarmMonitoring.Ps1” and Press Enter.
+
+
+Note if there are errors for remoting this command must be run on the applicable server(s):
+Enable-PSRemoting

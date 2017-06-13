@@ -1,0 +1,261 @@
+<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+<script src="http://solveraade04:81/sites/Test_Publishing/en/Dept_Root/Dept_Root_Subsite1/SiteAssets/jquery.SPServices-2014.02.min.js" type="text/javascript"></script>
+
+<style>
+  #progressbar {
+    margin-top: 20px;
+  }
+ 
+  .progress-label {
+    font-weight: bold;
+    text-shadow: 1px 1px 0 #fff;
+  }
+ 
+  .ui-dialog-titlebar-close {
+    display: none;
+  }
+</style>
+
+<div id="dialog" title="Running Workflows">
+  <div class="progress-label">Starting workflows...</div>
+  <div id="progressbar"></div>
+</div>
+
+<button id="workflowButton">Start Workflows</button>
+
+<script>
+
+$( function() {
+    var progressTimer,
+	  totalCount,
+	  workflowArray = [],
+	  secondFlag = false,
+      progressbar = $( "#progressbar" ),
+	  
+      progressLabel = $( ".progress-label" ),
+      dialogButtons = [{
+        text: "Close",
+        click: closeDownload
+      }],
+	  
+      dialog = $( "#dialog" ).dialog({
+        autoOpen: false,
+        closeOnEscape: false,
+        resizable: false,
+        buttons: dialogButtons,
+        open: function() {
+			
+			var activeWF;
+			workflowArray = [];
+			
+			var listItems = $().SPServices({
+				operation: "GetListItems",
+				listName: "test_list",
+				async: false,
+				CAMLViewFields: "<ViewFields><FieldRef Name='ID' /></ViewFields>",
+				completefunc: function () {}			
+			});
+
+			var i = 0;
+			$(listItems.responseXML).SPFilterNode("z:row").each(function() {
+					workflowArray[i] = $(this).attr("ows_ID");
+					i++;
+			});
+			
+			var listItems2 = $().SPServices({
+				operation: "GetListItems",
+				listName: "test_list3",
+				async: false,
+				CAMLViewFields: "<ViewFields><FieldRef Name='ID' /></ViewFields>",
+				completefunc: function () {}			
+			});
+			
+			totalCount = $(listItems.responseXML).SPFilterNode("z:row").length + $(listItems2.responseXML).SPFilterNode("z:row").length;
+			
+			progressbar.progressbar( "option", "max", totalCount );
+			progressbar.progressbar( "value", 1 );
+
+			startWorkflow({
+			  listName:"test_list",
+			  itemID:workflowArray[0].toString(),
+			  workflowName:"test",
+			  parameters:[],
+			  after:function() { }
+			});
+
+			setTimeout(function() { checkWorkflowStatus(0, "test_list", "test") }, 1000);
+
+        },
+        beforeClose: function() {
+          workflowButton.button( "option", {
+            disabled: false,
+            label: "Start First Workflows"
+          });
+        }
+      }),
+	  
+	  
+      workflowButton = $( "#workflowButton" )
+        .button()
+        .on( "click", function() {
+          $( this ).button( "option", {
+            disabled: true,
+            label: "running..."
+          });
+          dialog.dialog( "open" );
+        });
+ 
+    progressbar.progressbar({
+      value: false,
+      change: function() {
+        progressLabel.text( "Current Progress: " + progressbar.progressbar( "value" ) + " of " + totalCount );
+      },
+      complete: function() {
+        progressLabel.text( "Complete!" );
+        dialog.dialog( "option", "buttons", [{
+          text: "Close",
+          click: closeDownload
+        }]);
+        $(".ui-dialog button").last().trigger( "focus" );
+      }
+    });
+
+ 
+    function closeDownload() {
+      clearTimeout( progressTimer );
+      dialog
+        .dialog( "option", "buttons", dialogButtons )
+        .dialog( "close" );
+      progressbar.progressbar( "value", false );
+      progressLabel
+        .text( "Starting workflow..." );
+      workflowButton.trigger( "focus" );
+    }
+
+ 
+
+function checkWorkflowStatus(itemID, listName, workflowName) {
+	$().SPServices({
+		operation: 'GetWorkflowDataForItem', 
+		item: 'http://solveraade04/sites/DevSite/Lists/' + listName + '/' + workflowArray[itemID].toString() + '_.000',
+		completefunc: function(data,status){
+			activeWF = $(data.responseXML).find("ActiveWorkflowsData > Workflows > Workflow").attr("Status1");
+		
+			var val;
+			
+			val = progressbar.progressbar( "value" ) || 0;
+ 
+			if (activeWF == '2') {
+				setTimeout(function() { checkWorkflowStatus(itemID, listName, workflowName) }, 500);
+			}
+			else if (activeWF == '5') {
+				itemID = itemID + 1;
+				progressbar.progressbar( "value", val + 1 );
+					
+				if (itemID <= (workflowArray.length - 1)) {
+					startWorkflow({
+					  listName:listName,
+					  itemID:workflowArray[itemID].toString(),
+					  workflowName:workflowName,
+					  parameters:[],
+					  after:function() {
+						 checkWorkflowStatus(itemID, listName, workflowName);
+					  }
+					});
+				} else if (secondFlag == false) {
+					secondFlag = true;
+					workflowArray = [];
+					var i = 0;
+					var listItems = $().SPServices({
+						operation: "GetListItems",
+						listName: "test_list3",
+						async: false,
+						CAMLViewFields: "<ViewFields><FieldRef Name='ID' /></ViewFields>",
+						completefunc: function () {}			
+					});
+
+					$(listItems.responseXML).SPFilterNode("z:row").each(function() {
+						workflowArray[i] = $(this).attr("ows_ID");
+						i++;
+					});
+					
+					startWorkflow({
+					  listName:"test_list3",
+					  itemID:workflowArray[0].toString(),
+					  workflowName:"test3",
+					  parameters:[],
+					  after:function() {  }
+					});
+					
+					setTimeout(function() { checkWorkflowStatus(0, "test_list3", "test3") }, 1000);
+				}
+			}
+			else {
+				setTimeout(function() { checkWorkflowStatus(itemID, listName, workflowName) }, 500);
+			}
+		}
+	});	
+}
+
+function startWorkflow(params) {
+  // we need to make sure that SP.ClientContext is loaded
+  if (SP.ClientContext == undefined) {
+    setTimeout(function() { startWorkflow(params) }, 100);
+     return
+  }
+  
+  params.after = params.after || (function() {});
+  if (!params.workflowName) { alert("Please provide the workflow name!"); return; }
+
+  function onQuerySucceeded() {
+    var enumerator = workflows.getEnumerator();
+    while (enumerator.moveNext()) {
+      var workflow = enumerator.get_current();
+
+      if (workflow.get_name() == params.workflowName) {
+        var url = 'http://' + window.location.hostname + item.get_item("FileRef");
+        var templateId = '{' + workflow.get_id().toString() + '}';
+        var workflowParameters = "<root />";
+        if (params.parameters) {
+          var p;
+          if (params.parameters.length == undefined) p = [ params.parameters ];
+          p = params.parameters.slice(0);
+          workflowParameters = "<Data>";
+          for (var i=0; i<p.length; i++)
+            workflowParameters += "<"+p[i].Name+">"+p[i].Value+"</"+p[i].Name+">";
+          workflowParameters += "</Data>";
+        }
+        // trigger the workflow
+        jQuery().SPServices({
+          operation:"StartWorkflow",
+          async:false,
+          item:url,
+          templateId:templateId,
+          workflowParameters:workflowParameters,
+          completefunc:params.after
+        });
+      break;
+      }
+    }
+  }
+  function onQueryFailed() { throw "Error with Start workflow" }
+
+  //var guid = new SP.Guid(__GlobalConfig.listID['Requested']);
+  var context = SP.ClientContext.get_current();
+  var lists = context.get_web().get_lists();
+  var list = lists.getByTitle(params.listName);
+  var item = list.getItemById(params.itemID);
+  var file = item.get_file();
+
+  context.load(list);
+  context.load(item);
+
+  var workflows = list.get_workflowAssociations();
+  context.load(workflows);
+
+  context.executeQueryAsync(onQuerySucceeded, onQueryFailed);
+}
+ } );
+</script>
