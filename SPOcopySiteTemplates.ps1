@@ -25,7 +25,6 @@ $contextDest = New-Object Microsoft.SharePoint.Client.ClientContext($UrlDest)
 $contextDest.Credentials = Get-SPOCredentials $UserName $Password
 
 $solutionCatalog = 121
-
 $web = $context.Site.RootWeb
 $file = $web.GetFileByUrl("https://potashcorp.sharepoint.com/_catalogs/solutions/Department%20Portal.wsp")
 $newFileBytes = $file.OpenBinaryStream()
