@@ -25,7 +25,7 @@ $(document).ready(function () {
 		txtQuantity.closest('tr').hide();
 		txtDescription.closest('tr').hide();
 
-		var emptyRow = true;
+		emptyRow = true;
 		
 		emptyRow = checkEmptyRow(txtPO_Num, emptyRow);
 		emptyRow = checkEmptyRow(txtInvoice_Num, emptyRow);
@@ -44,10 +44,10 @@ $(document).ready(function () {
 		}
 	}
 	
-	var reasonText = $("textarea[title='Reason For Returning Text']");
+	var reasonText = $("textarea[title='Reason For Shipping Text']");
 	reasonText.closest('tr').hide();
 	
-	var ddlReason = $("select[title='Reason For Returning'");
+	var ddlReason = $("select[title='Reason For Shipping'");
 	var ddlReasonSelected = ddlReason.find("option:selected").text();
 
 	var lblReason = document.createElement("div");
@@ -96,8 +96,8 @@ $(document).ready(function () {
     });
 	
 	hideTableCheck();
-	var vendor = Autocomplete('ShippingAdvice', 'Vendor');
-	
+	Autocomplete('Vendor');
+	Autocomplete('Carrier');
 });
 
 function AddDetail()

@@ -1,24 +1,6 @@
 [System.Reflection.Assembly]::LoadWithPartialName("Microsoft.SharePoint.Client")
 [System.Reflection.Assembly]::LoadWithPartialName("Microsoft.SharePoint.Client.Runtime")
 
-$UserName = "hartley.schroeder@potashcorp.com"
-#$UserName = Read-Host -Prompt "Enter the user"
-$Password = Read-Host -Prompt "Enter the password" -AsSecureString
-
-$Url = "https://potashcorp.sharepoint.com/sites/itdev/solvera"
-
-$context = New-Object Microsoft.SharePoint.Client.ClientContext($Url)
-$context.Credentials = Get-SPOCredentials $UserName $Password
-
-$web = $context.Web
-$context.Load($web)
-$context.ExecuteQuery()
-
-$context.Load($web.Webs)
-$context.ExecuteQuery()
-if ($web.Webs.Count -gt 0){
-    RecursiveWebs $web
-}
 Function Get-SPOCredentials($UserName, $Password)
 {
    return New-Object Microsoft.SharePoint.Client.SharePointOnlineCredentials($UserName,$Password)
@@ -41,6 +23,23 @@ Function RecursiveWebs($web){
             RecursiveWebs $w
         }
     }
+}
+
+$UserName = "hartley.schroeder@potashcorp.com"
+#$UserName = Read-Host -Prompt "Enter the user"
+$Password = Read-Host -Prompt "Enter the password" -AsSecureString
+
+$Url = "https://potashcorp.sharepoint.com/sites/itdev/solvera"
+
+$context = New-Object Microsoft.SharePoint.Client.ClientContext($Url)
+$context.Credentials = Get-SPOCredentials $UserName $Password
+
+$web = $context.Web
+$context.Load($web)
+$context.Load($web.Webs)
+$context.ExecuteQuery()
+if ($web.Webs.Count -gt 0){
+    RecursiveWebs $web
 }
 
 $context.Dispose()

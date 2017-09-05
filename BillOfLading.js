@@ -1,6 +1,9 @@
 $(document).ready(function () {	
 	var RefNum = $("input[title='Shipper Reference No.'");
 	RefNum.closest('tr').hide();
+
+	var EmergencyPhone = $("input[title='Emergency Phone'");
+	EmergencyPhone.closest('tr').hide();
 	
 	var docName = $("input[title='Name Required Field']");
 	docName.prop("disabled", true);
@@ -58,13 +61,14 @@ $(document).ready(function () {
 	}
 	hideTableCheck();
 	
-	var vendor = Autocomplete('BillOfLading', 'Company Name');
+	Autocomplete('Company Name');
 });
 
 function PreSaveAction()
 {
 	var PartTable = document.getElementById("table_id");
 	var rowCount = $("#table_id tr").length;
+	var DGflag = false;
 	for(i = 1; i <= 11; i++)
 	{
 		if(i < rowCount)
@@ -85,6 +89,11 @@ function PreSaveAction()
 			$("input[title='Weight" + i + "']").val(txtWeight);
 			$("input[title='Rate" + i + "']").val(txtRate);
 			$("input[title='Charges" + i + "']").val(txtCharges);
+
+			if(txtDG.length > 0)
+			{
+				DGflag = true;
+			}
 		}
 		else
 		{
@@ -98,6 +107,14 @@ function PreSaveAction()
 		}
 	}
 
+	if(DGflag == true)
+	{
+		$("input[title='Emergency Phone'").val("1-613-996-6666 Canutec");
+	}
+	else
+	{
+		$("input[title='Emergency Phone'").val("");
+	}
 	var docName = $("input[title='Name Required Field']").val();
 	var RefNum = $("input[title='Shipper Reference No.'").val(docName);
 	$("input[title='Form_Type']").val("Bill of Lading");
