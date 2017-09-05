@@ -3,10 +3,7 @@
 
 <div style="width:400px">
 	<table id="table_id">
-		
 	</table>
-	 
-	
 </div>
 
 <script type="text/javascript">
