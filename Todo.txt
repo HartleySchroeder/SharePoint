@@ -1,4 +1,4 @@
-To Setup Git
+Setup Git
 
 - Cloned with the desktop app
 - Then ran Git Bash command: git push -u origin master
