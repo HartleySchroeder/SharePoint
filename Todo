@@ -1,0 +1,22 @@
+To Setup Git
+
+- Cloned with the desktop app
+- Then ran Git Bash command: git push -u origin master
+
+Allan Forms
+
+- Shipping Advice - Carriers field to get auto population (requires new list to populate the data) - done
+- Reason for Return renamed to Reason for Shipping - done
+- Move 'Add New' button on form next to 'Save/Cancel' - done
+- Change wording on 'Add New' button to 'Additional Data' - done
+- More views to aid in filtering/searching
+- Address data possibly incomplete in Vendors list - done
+- Auto populate Emergency Phone - done
+- New 'unit of measure' column - waiting on verification
+- Quantity Returned change to just Quantity - done
+
+Powershell
+
+- Script to audit users of site - done
+- Script to set the logo on all sites - done
+- Script to push out site template solution and activate - done
