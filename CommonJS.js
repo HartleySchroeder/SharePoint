@@ -87,7 +87,7 @@ function Autocomplete(FormField) {
 		}
 		
 		var itemArray = [];
-		var url = ""
+		var url = "";
 
 		if(FormField == "Carrier")
 		{
@@ -115,9 +115,9 @@ function Autocomplete(FormField) {
 				}
 				else
 				{
-					for(var i = 0; i < items.length; i++)
+					for(var j = 0; j < items.length; j++)
 					{
-						itemArray.push(items[i].Name + " " + items[i].Title + ";" + items[i].Name + ";" + items[i].Address + ";" + items[i].City + ";" + items[i].State + ";" + items[i].Country + ";" + items[i].Title);
+						itemArray.push(items[j].Name + " " + items[j].Title + ";" + items[j].Name + ";" + items[j].Address + ";" + items[j].City + ";" + items[j].State + ";" + items[j].Country + ";" + items[j].Title);
 					}
 				}
 				
