@@ -21,7 +21,7 @@ $Url = "https://potashcorp.sharepoint.com"
 #$UrlDest = Read-Host -Prompt "Enter the destination URL"
 $UrlDest = "https://potashcorp.sharepoint.com/sites/itdev/"
 
-#load the context with the provided credentials
+#load the contexts with the provided credentials
 $context = New-Object Microsoft.SharePoint.Client.ClientContext($Url)
 $context.Credentials = Get-SPOCredentials $UserName $Password
 $contextDest = New-Object Microsoft.SharePoint.Client.ClientContext($UrlDest)

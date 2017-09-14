@@ -3,7 +3,16 @@ function txtRowField(field)
 	var txtField = document.createElement("input");
 	txtField.type = 'text';
 	txtField.value = field;
+	txtField.maxLength = 255;
 	return txtField;
+}
+
+function chkRowField(field)
+{
+	var chkField = document.createElement("input");
+	chkField.type = 'checkbox';
+	chkField.checked = field;
+	return chkField;
 }
 
 function DeleteRow(sib, cols)
@@ -89,24 +98,24 @@ function Autocomplete(FormField) {
 		var itemArray = [];
 		var url = "";
 
-		if(FormField == "Carrier")
+		if(FormField == "Ship Carrier")
 		{
-			url = "https://potashcorp.sharepoint.com/sites/itdev/_api/web/lists/GetByTitle('Carriers')/items?$filter=startswith(Title, '";
+			url = "https://potashcorp.sharepoint.com/sites/forms/Shipping/_api/web/lists/GetByTitle('Carriers')/items?$filter=startswith(Title, '" + textInput + "')";
 		}
 		else
 		{
-			url = "https://potashcorp.sharepoint.com/sites/itdev/_api/web/lists/GetByTitle('Vendors')/items?$filter=startswith(Name, '";
+			url = "https://potashcorp.sharepoint.com/sites/forms/Shipping/_api/web/lists/GetByTitle('Vendors')/items?$filter=startswith(Name, '" + textInput + "') and OperatingUnit eq 'ALN OU'";
 		}
 		
 		$.ajax({
-			url: url + textInput + "') and OperatingUnit eq 'ALN OU'",
+			url: url,
 			method: "GET",
 			headers: { "Accept": "application/json; odata=verbose" },
 			success: function (data) {
 
 				var items = data.d.results;
 
-				if(FormField == "Carrier")
+				if(FormField == "Ship Carrier")
 				{
 					for(var i = 0; i < items.length; i++)
 					{
@@ -143,7 +152,7 @@ function Autocomplete(FormField) {
 					
 					var dispListItem = $(this).data('value');
 
-					if(FormField != "Carrier")
+					if(FormField != "Ship Carrier")
 					{
 						dispListItem = dispListItem.substr(dispListItem.indexOf(";") + 1, dispListItem.length);
 					}
@@ -152,13 +161,13 @@ function Autocomplete(FormField) {
 					{
 						$("textarea[title='Ship To']").val(addressArray[0] + "\n" + addressArray[1] + "\n" + addressArray[2] + " " + addressArray[3] + "\n" + addressArray[4] + "\n" + addressArray[5]);
 					}
-					if(FormField == 'Carrier')
+					if(FormField == 'Ship Carrier')
 					{
-						$("textarea[title='Carrier']").val(addressArray[0]);
+						$("input[title='Ship Carrier']").val(addressArray[0]);
 					}
-					if(FormField == 'Company Name')
+					if(FormField == 'Name of Carrier')
 					{
-						$("input[title='Company Name']").val(addressArray[0]);
+						$("input[title='Name of Carrier']").val(addressArray[0]);
 						$("input[title='To Company']").val(addressArray[0]);
 						$("input[title='To Street']").val(addressArray[1]);
 						$("input[title='To Destination']").val(addressArray[2] + " " + addressArray[3] + ", " + addressArray[4]);

@@ -1,7 +1,7 @@
 <script language="javascript" src="../SiteAssets/CommonJS/jquery.min.js" type="text/javascript"></script>
 
-<button onclick="createNewDocument('Shipping Advice');return false;">New Shipping Advice Allan Form</button>
-<button onclick="createNewDocument('Bill of Lading');return false;">New Bill of Lading Allan Form</button>
+<button onclick="createNewDocument('SA');return false;">New Shipping Advice Allan Form</button>
+<button onclick="createNewDocument('BL');return false;">New Bill of Lading Allan Form</button>
 
 <script type="text/javascript">
 
@@ -9,16 +9,16 @@ function createNewDocument(DocType) {
 
 	var ctx = SP.ClientContext.get_current();
 	var web = ctx.get_web();
-	var list = web.get_lists().getById("7ADAD7EF-82D4-4417-A38C-2982367A5862");
+	var list = web.get_lists().getByTitle("AllanFormsLib");
 	var folder = list.get_rootFolder();
 	
-	if (DocType == 'Shipping Advice')
+	if (DocType == 'SA')
 	{
-		var templateUrl = '/sites/itdev/solvera/AllanFormsLib/Forms/AllanForms/template.docx';
+		var templateUrl = '/sites/forms/Shipping/AllanFormsLib/Forms/ShippingAdvice/ShippingAdvice.docx';
 	}
-	else if (DocType == 'Bill of Lading')
+	else if (DocType == 'BL')
 	{
-		var templateUrl = '/sites/itdev/solvera/AllanFormsLib/Forms/BillOfLading/Bill-Of-Lading.docx';
+		var templateUrl = '/sites/forms/Shipping/AllanFormsLib/Forms/BillOfLading/Bill_Of_Lading.docx';
 	}
 	var docName;
 	var docNum;
@@ -26,27 +26,19 @@ function createNewDocument(DocType) {
 	var docFile;
 	
 	$.ajax({
-		url: "https://potashcorp.sharepoint.com/sites/itdev/solvera/_api/web/lists/GetByTitle('Document_Numbers')/items?$select=ID,Department,Form_Type,Document_Num&$filter=(Department eq 'ALN') and (Form_Type eq '" + DocType + "')",
+		url: "https://potashcorp.sharepoint.com/sites/forms/Shipping/_api/web/lists/GetByTitle('Document Numbers')/items?$select=ID,Department,Form_x0020_Type,Number&$filter=(Department eq 'ALN') and (Form_x0020_Type eq '" + DocType + "')",
 		method: "GET",
 		headers: { "Accept": "application/json; odata=verbose" },
 		success: function (data) {
 
 			if (data.d.results.length == 1) {
-				docNum = data.d.results[0].Document_Num
-				if (DocType == 'Shipping Advice')
-				{
-					docName = "Shipping Advice - " + data.d.results[0].Department + " " + data.d.results[0].Document_Num + ".docx";
-				}
-				else if (DocType == 'Bill of Lading')
-				{
-					docName = "Bill of Lading - " + data.d.results[0].Department + " " + data.d.results[0].Document_Num + ".docx";
-				}
-				
+				docNum = data.d.results[0].Number;
+				docName = data.d.results[0].Department + "-" + data.d.results[0].Form_x0020_Type + "-" + data.d.results[0].Number + ".docx";
 			}
 			docNum = docNum + 1;
 			var item = {
-				"__metadata": { "type": "SP.Data.Document_x005f_NumbersListItem" },
-				"Document_Num": docNum
+				"__metadata": { "type": "SP.Data.Document_x0020_NumbersListItem" },
+				"Number": docNum
 			};
 			
 			$.ajax({
@@ -80,7 +72,7 @@ function createNewDocument(DocType) {
 	});
 	
 	function onCreateSuccess() {
-		setTimeout(function(){GoToPage(String.format("{0}?ID={1}&Source={2}", list.get_defaultEditFormUrl(), docItem.get_id(), "https://potashcorp.sharepoint.com/sites/itdev/solvera/AllanFormsLib/Forms/AllItems.aspx"))}, 3000);
+		setTimeout(function(){GoToPage(String.format("{0}?ID={1}&Source={2}", list.get_defaultEditFormUrl(), docItem.get_id(), "https://potashcorp.sharepoint.com/sites/forms/Shipping/AllanFormsLib/Forms/AllItems.aspx"))}, 3000);
 	}
 }
 </script>

@@ -12,7 +12,7 @@
 		ddlConentType.closest('tr').hide();
 		var ddlContentTypeSel = ddlConentType.find("option:selected").text();
 		
-		var formType = $("input[title='Form_Type'");
+		var formType = $("input[title='Form Type'");
 		formType.closest('tr').hide();
 		
 		var head = document.getElementsByTagName('head')[0];
@@ -26,7 +26,7 @@
 		var btnAdd = "<input id='btnAddRow' type='button' value = 'Additional Data' onclick = 'AddDetail();'>"
 		$(".ms-formtoolbar > tbody > tr").append(btnAdd);
 		
-		if(ddlContentTypeSel == "AllanForms")
+		if(ddlContentTypeSel == "ShippingAdvice")
 		{
 			js.src = "../../SiteAssets/AllanForms/ShippingAdvice.js";
 			

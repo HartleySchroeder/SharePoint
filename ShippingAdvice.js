@@ -1,5 +1,5 @@
 $(document).ready(function () {	
-	var DocNum = $("input[title='Document Number'");
+	var DocNum = $("input[title='Shipping Advice'");
 	DocNum.closest('tr').hide();
 	
 	var docName = $("input[title='Name Required Field']");
@@ -16,10 +16,10 @@ $(document).ready(function () {
 	
 	for(i = 1; i <= 10; i++)
 	{
-		var txtPO_Num = $("input[title='PO_Num" + i + "']");
-		var txtInvoice_Num = $("input[title='Invoice_Num" + i + "']");
-		var txtQuantity = $("input[title='Quantity" + i + "']");
-		var txtDescription = $("input[title='Description" + i + "']");
+		var txtPO_Num = $("input[title='col1row" + i + "']");
+		var txtInvoice_Num = $("input[title='col2row" + i + "']");
+		var txtQuantity = $("input[title='col3row" + i + "']");
+		var txtDescription = $("input[title='col4row" + i + "']");
 		txtPO_Num.closest('tr').hide();
 		txtInvoice_Num.closest('tr').hide();
 		txtQuantity.closest('tr').hide();
@@ -46,6 +46,8 @@ $(document).ready(function () {
 	
 	var reasonText = $("textarea[title='Reason For Shipping Text']");
 	reasonText.closest('tr').hide();
+	var reasonDesc = $("input[title='Reason For Shipping Desc']");
+	reasonDesc.closest('tr').hide();
 	
 	var ddlReason = $("select[title='Reason For Shipping'");
 	var ddlReasonSelected = ddlReason.find("option:selected").text();
@@ -53,6 +55,8 @@ $(document).ready(function () {
 	var lblReason = document.createElement("div");
 	reasonText.closest('tr').show();
 	reasonText.closest('td').prev('td').text("");
+
+	reasonText.val(reasonText.val().substring(reasonText.val().indexOf(":") + 2));
 	
 	if(ddlReasonSelected == "CREDIT") {
 		lblReason.innerHTML = "RMA Number";
@@ -97,7 +101,7 @@ $(document).ready(function () {
 	
 	hideTableCheck();
 	Autocomplete('Vendor');
-	Autocomplete('Carrier');
+	Autocomplete('Ship Carrier');
 });
 
 function AddDetail()
@@ -123,18 +127,10 @@ function CreatePartRow(Detail) {
 	btnDel.type = 'button';
 	btnDel.value = "remove";
 	btnDel.onclick = function() { DeleteRow($(this), 5); };
-	var txtPO_Num = document.createElement("input");
-	txtPO_Num.type = 'text';
-	txtPO_Num.value = Detail.PO_Num;
-	var txtInvoice_Num = document.createElement("input");
-	txtInvoice_Num.type = 'text';
-	txtInvoice_Num.value = Detail.Invoice_Num;
-	var txtQuantity = document.createElement("input");
-	txtQuantity.type = 'text';
-	txtQuantity.value = Detail.Quantity;
-	var txtDescription = document.createElement("input");
-	txtDescription.type = 'text';
-	txtDescription.value = Detail.Description;
+	var txtPO_Num = txtRowField(Detail.PO_Num);
+	var txtInvoice_Num = txtRowField(Detail.Invoice_Num);
+	var txtQuantity = txtRowField(Detail.Quantity);
+	var txtDescription = txtRowField(Detail.Description);
 
 	DelButton.appendChild(btnDel);
 	PO_Num.appendChild(txtPO_Num);
@@ -164,23 +160,43 @@ function PreSaveAction()
 			var txtQuantity = $(row.cells[3]).find('input').val();
 			var txtDescription = $(row.cells[4]).find('input').val();
 
-			$("input[title='PO_Num" + i + "']").val(txtPO_Num);
-			$("input[title='Invoice_Num" + i + "']").val(txtInvoice_Num);
-			$("input[title='Quantity" + i + "']").val(txtQuantity);
-			$("input[title='Description" + i + "']").val(txtDescription);
+			$("input[title='col1row" + i + "']").val(txtPO_Num);
+			$("input[title='col2row" + i + "']").val(txtInvoice_Num);
+			$("input[title='col3row" + i + "']").val(txtQuantity);
+			$("input[title='col4row" + i + "']").val(txtDescription);
 		}
 		else
 		{
-			$("input[title='PO_Num" + i + "']").val("");
-			$("input[title='Invoice_Num" + i + "']").val("");
-			$("input[title='Quantity" + i + "']").val("");
-			$("input[title='Description" + i + "']").val("");
+			$("input[title='col1row" + i + "']").val("");
+			$("input[title='col2row" + i + "']").val("");
+			$("input[title='col3row" + i + "']").val("");
+			$("input[title='col4row" + i + "']").val("");
 		}
 	}
-  
+
+	var reasonDesc = $("input[title='Reason For Shipping Desc']");
+	var ddlReason = $("select[title='Reason For Shipping'");
+	var ddlReasonSelected = ddlReason.find("option:selected").text();
+	
+	if(ddlReasonSelected == "CREDIT") {
+		reasonDesc.val("RMA Number");
+	}
+	else if(ddlReasonSelected == "REPAIR") {
+		reasonDesc.val("Advise buyer of price and delivery");
+	}
+	else if(ddlReasonSelected == "EXCHANGE/INCORRECT GOODS SUPPLIED") {
+		reasonDesc.val("Vendor RMA Number");
+	}
+	else if(ddlReasonSelected == "OTHER") {
+		reasonDesc.val("Other Reason");
+	}
+	else if(ddlReasonSelected == "") {
+		reasonDesc.val("");
+	}
+
 	var docNum = $("input[title='Name Required Field']").val();
-	$("input[title='Document Number']").val(docNum);
-	$("input[title='Form_Type']").val("Shipping Advice");
+	$("input[title='Shipping Advice']").val(docNum);
+	$("input[title='Form Type']").val("Shipping Advice");
 
 	return true;
 }

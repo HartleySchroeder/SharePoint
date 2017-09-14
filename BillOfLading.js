@@ -1,5 +1,5 @@
 $(document).ready(function () {	
-	var RefNum = $("input[title='Shipper Reference No.'");
+	var RefNum = $("input[title='Bill of Lading'");
 	RefNum.closest('tr').hide();
 
 	var EmergencyPhone = $("input[title='Emergency Phone'");
@@ -8,15 +8,15 @@ $(document).ready(function () {
 	var docName = $("input[title='Name Required Field']");
 	docName.prop("disabled", true);
 	
-	for(i = 1; i <= 11; i++)
+	for(i = 1; i <= 10; i++)
 	{
-		var txtUnit = $("input[title='Units" + i + "']");
-		var txtDG = $("input[title='DG" + i + "']");
-		var txtDesc = $("input[title='Desc" + i + "']");
-		var txtTotal = $("input[title='Total" + i + "']");
-		var txtWeight = $("input[title='Weight" + i + "']");
-		var txtRate = $("input[title='Rate" + i + "']");
-		var txtCharges = $("input[title='Charges" + i + "']");
+		var txtUnit = $("input[title='col1row" + i + "']");
+		var txtDG = $("input[title='chk1row" + i + "']");
+		var txtDesc = $("input[title='col2row" + i + "']");
+		var txtTotal = $("input[title='col3row" + i + "']");
+		var txtWeight = $("input[title='col4row" + i + "']");
+		var txtRate = $("input[title='col5row" + i + "']");
+		var txtCharges = $("input[title='col6row" + i + "']");
 		txtUnit.closest('tr').hide();
 		txtDG.closest('tr').hide();
 		txtDesc.closest('tr').hide();
@@ -38,7 +38,6 @@ $(document).ready(function () {
 		var emptyRow = true;
 		
 		emptyRow = checkEmptyRow(txtUnit, emptyRow);
-		emptyRow = checkEmptyRow(txtDG, emptyRow);
 		emptyRow = checkEmptyRow(txtDesc, emptyRow);
 		emptyRow = checkEmptyRow(txtTotal, emptyRow);
 		emptyRow = checkEmptyRow(txtWeight, emptyRow);
@@ -48,7 +47,7 @@ $(document).ready(function () {
 		if(emptyRow == false)
 		{
 			Detail.Unit = txtUnit.val();
-			Detail.DG = txtDG.val();
+			Detail.DG = txtDG[0].checked;
 			Detail.Desc = txtDesc.val();
 			Detail.Total = txtTotal.val();
 			Detail.Weight = txtWeight.val();
@@ -61,7 +60,7 @@ $(document).ready(function () {
 	}
 	hideTableCheck();
 	
-	Autocomplete('Company Name');
+	Autocomplete('Name of Carrier');
 });
 
 function PreSaveAction()
@@ -69,41 +68,44 @@ function PreSaveAction()
 	var PartTable = document.getElementById("table_id");
 	var rowCount = $("#table_id tr").length;
 	var DGflag = false;
-	for(i = 1; i <= 11; i++)
+	for(i = 1; i <= 10; i++)
 	{
 		if(i < rowCount)
 		{
 			var row = PartTable.rows[i];
 			var txtUnit = $(row.cells[1]).find('input').val();
-			var txtDG = $(row.cells[2]).find('input').val();
 			var txtDesc = $(row.cells[3]).find('input').val();
 			var txtTotal = $(row.cells[4]).find('input').val();
 			var txtWeight = $(row.cells[5]).find('input').val();
 			var txtRate = $(row.cells[6]).find('input').val();
 			var txtCharges = $(row.cells[7]).find('input').val();
 
-			$("input[title='Units" + i + "']").val(txtUnit);
-			$("input[title='DG" + i + "']").val(txtDG);
-			$("input[title='Desc" + i + "']").val(txtDesc);
-			$("input[title='Total" + i + "']").val(txtTotal);
-			$("input[title='Weight" + i + "']").val(txtWeight);
-			$("input[title='Rate" + i + "']").val(txtRate);
-			$("input[title='Charges" + i + "']").val(txtCharges);
+			$("input[title='col1row" + i + "']").val(txtUnit);
+			$("input[title='col2row" + i + "']").val(txtDesc);
+			$("input[title='col3row" + i + "']").val(txtTotal);
+			$("input[title='col4row" + i + "']").val(txtWeight);
+			$("input[title='col5row" + i + "']").val(txtRate);
+			$("input[title='col6row" + i + "']").val(txtCharges);
 
-			if(txtDG.length > 0)
+			if($(row.cells[2]).find('input')[0].checked)
 			{
+				$("input[title='chk1row" + i + "']")[0].checked = true;
 				DGflag = true;
+			}
+			else
+			{
+				$("input[title='chk1row" + i + "']")[0].checked = false;
 			}
 		}
 		else
 		{
-			$("input[title='Units" + i + "']").val("");
-			$("input[title='DG" + i + "']").val("");
-			$("input[title='Desc" + i + "']").val("");
-			$("input[title='Total" + i + "']").val("");
-			$("input[title='Weight" + i + "']").val("");
-			$("input[title='Rate" + i + "']").val("");
-			$("input[title='Charges" + i + "']").val("");
+			$("input[title='col1row" + i + "']").val("");
+			$("input[title='chk1row" + i + "']")[0].checked = false;
+			$("input[title='col2row" + i + "']").val("");
+			$("input[title='col3row" + i + "']").val("");
+			$("input[title='col4row" + i + "']").val("");
+			$("input[title='col5row" + i + "']").val("");
+			$("input[title='col6row" + i + "']").val("");
 		}
 	}
 
@@ -116,8 +118,8 @@ function PreSaveAction()
 		$("input[title='Emergency Phone'").val("");
 	}
 	var docName = $("input[title='Name Required Field']").val();
-	var RefNum = $("input[title='Shipper Reference No.'").val(docName);
-	$("input[title='Form_Type']").val("Bill of Lading");
+	var RefNum = $("input[title='Bill of Lading'").val(docName);
+	$("input[title='Form Type']").val("Bill of Lading");
 
 	return true;
 }
@@ -139,7 +141,7 @@ function CreatePartRow(Detail)
 	btnDel.value = "remove";
 	btnDel.onclick = function() { DeleteRow($(this), 7); };
 	var txtUnit = txtRowField(Detail.Unit);
-	var txtDG = txtRowField(Detail.DG);
+	var txtDG = chkRowField(Detail.DG);
 	var txtDesc = txtRowField(Detail.Desc);
 	var txtTotal = txtRowField(Detail.Total);
 	var txtWeight = txtRowField(Detail.Weight);

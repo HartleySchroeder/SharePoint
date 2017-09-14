@@ -15,6 +15,30 @@ Allan Forms
 - New 'unit of measure' column - waiting on verification
 - Quantity Returned change to just Quantity - done
 
+Shipping Advice:
+
+- Eliminate “Document Number” on form and replace with “Shipping Advice: ” - done
+- Shipping advice and BOL should have unique numbers. I would suggest using Site Identification – SA or BL and the number. Ie ALN-SA-0123, ALN-BL-0123.
+- “TO:”, ATTN:”, and “CONTACT NUMBER:” should be moved to the left margin. (Same as margin for Reason for Shipping.)
+- There’s 2 spots to input a p/o : one on main page does not populate on the form so it can be removed. There’s a spot on the additional information which works. - done
+- Carrier does not populate on the form. - done
+- Column for invoice should be same size as p/o column and make description column bigger. - done
+- There’s no disclaimer on the shipping advice, ie “ This is not an authorization for procurement of material or service.”
+- Prepaid/Collect does not populate on the form. - done
+- Auto text for reason for shipping does not populate on the form. Ie Repair verbage “Please advise buyer of price and delivery before proceeding” shows up when you select repair, but does not populate on the form. - done
+- When I chose Acklands only their Winnipeg office populated so there is still some sorting issue there.
+- The form is able to populate more than one page, should drop information lines to keep it under and not allow to go over one page.
+- Title “Shipping Advice” can be moved up on for to give more room. - done
+ 
+Bill Of Lading:
+
+- When filling out the form the First line is “Company Name”, this should be “Name of Carrier” as it is on the form in small print.
+- Form cannot go over one page – again eliminate lines when needed and block from going over one page.
+- Need Unique #
+- Replace Shipper Reference Number with “Bill of Lading: “ then just populate auto bill of lading number in the column.
+- DGMD column should be a “X” or blank question and just populate “X” if selected then populate Canutec # if X is selected.
+- As discussed the auto reorder verbage at top can be removed. (reference to ICC Canada)
+
 Powershell
 
 - Script to audit users of site - done
