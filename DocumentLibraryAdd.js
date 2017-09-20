@@ -6,7 +6,7 @@
 <script type="text/javascript">
 
 function createNewDocument(DocType) {
-
+	var waitUI = SP.UI.ModalDialog.showWaitScreenWithNoClose('Creating Document...', "Please wait, this shouldn't take long...", 100, 380);
 	var ctx = SP.ClientContext.get_current();
 	var web = ctx.get_web();
 	var list = web.get_lists().getByTitle("AllanFormsLib");
@@ -14,7 +14,7 @@ function createNewDocument(DocType) {
 	
 	if (DocType == 'SA')
 	{
-		var templateUrl = '/sites/forms/Shipping/AllanFormsLib/Forms/ShippingAdvice/ShippingAdvice.docx';
+		var templateUrl = '/sites/forms/Shipping/AllanFormsLib/Forms/ShippingAdvice/Shipping_Advice.docx';
 	}
 	else if (DocType == 'BL')
 	{
@@ -24,13 +24,12 @@ function createNewDocument(DocType) {
 	var docNum;
 	var docItem;
 	var docFile;
-	
+
 	$.ajax({
 		url: "https://potashcorp.sharepoint.com/sites/forms/Shipping/_api/web/lists/GetByTitle('Document Numbers')/items?$select=ID,Department,Form_x0020_Type,Number&$filter=(Department eq 'ALN') and (Form_x0020_Type eq '" + DocType + "')",
 		method: "GET",
 		headers: { "Accept": "application/json; odata=verbose" },
 		success: function (data) {
-
 			if (data.d.results.length == 1) {
 				docNum = data.d.results[0].Number;
 				docName = data.d.results[0].Department + "-" + data.d.results[0].Form_x0020_Type + "-" + data.d.results[0].Number + ".docx";
@@ -59,20 +58,22 @@ function createNewDocument(DocType) {
 					ctx.load(docItem, "Id");
 					ctx.load(docFile, "ServerRelativeUrl", "CheckOutType");
 					ctx.executeQueryAsync(onCreateSuccess, onFail);
+					waitUI.close();
 				},
 				error: function (data) {
 					console.log(data);
 				}
 			});
-			
 		},
 		error: function (data) {
 			console.log(data);
 		}
 	});
-	
+
 	function onCreateSuccess() {
-		setTimeout(function(){GoToPage(String.format("{0}?ID={1}&Source={2}", list.get_defaultEditFormUrl(), docItem.get_id(), "https://potashcorp.sharepoint.com/sites/forms/Shipping/AllanFormsLib/Forms/AllItems.aspx"))}, 3000);
+		
+		GoToPage(String.format("{0}?ID={1}&Source={2}", list.get_defaultEditFormUrl(), docItem.get_id(), "https://potashcorp.sharepoint.com/sites/forms/Shipping/AllanFormsLib/Forms/AllItems.aspx"));
 	}
 }
+
 </script>

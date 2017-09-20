@@ -3,7 +3,7 @@ function txtRowField(field)
 	var txtField = document.createElement("input");
 	txtField.type = 'text';
 	txtField.value = field;
-	txtField.maxLength = 255;
+	txtField.maxLength = 140;
 	return txtField;
 }
 
@@ -20,8 +20,16 @@ function DeleteRow(sib, cols)
 	var removeRow = sib.closest('tr');
 	for(i = 1; i <= cols; i++)
 	{
-		$(removeRow[0].cells[i]).find('input').val("");
+		if(i == 2)
+		{
+			$(removeRow[0].cells[i]).find('input')[0].checked = false;	
+		}
+		else
+		{
+			$(removeRow[0].cells[i]).find('input').val("");
+		}
 	}
+	
 	removeRow.remove();
 	hideTableCheck();
 	
