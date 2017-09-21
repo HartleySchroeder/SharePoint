@@ -1,3 +1,13 @@
+param
+(   
+    [Parameter(Mandatory=$true)][string]$URL = "https://potashcorp.sharepoint.com",
+    [Parameter(Mandatory=$true)][string]$UrlDest,
+    [Parameter(Mandatory=$true)][string]$FileName = "Department Portal",
+    [Parameter(Mandatory=$true)][string]$FileURL = "https://potashcorp.sharepoint.com/_catalogs/solutions/Department%20Portal.wsp",
+    [Parameter(Mandatory=$true)][string]$Username,
+    [SecureString]$Password = $( Read-Host "Input password, please" -AsSecureString  )
+)
+
 [System.Reflection.Assembly]::LoadWithPartialName("Microsoft.SharePoint.Client")
 [System.Reflection.Assembly]::LoadWithPartialName("Microsoft.SharePoint.Client.Runtime")
 [System.Reflection.Assembly]::LoadWithPartialName("Microsoft.SharePoint.Client.Publishing")
@@ -13,16 +23,8 @@ Function DeleteWSP($File2Delete)
     $contextDest.ExecuteQuery()
 }
 
-$UserName = "hartley.schroeder@potashcorp.com"
-#$UserName = Read-Host -Prompt "Enter the user"
-$Password = Read-Host -Prompt "Enter the password" -AsSecureString
-#$Url = Read-Host -Prompt "Enter the source URL"
-$Url = "https://potashcorp.sharepoint.com"
-#$UrlDest = Read-Host -Prompt "Enter the destination URL"
-$UrlDest = "https://potashcorp.sharepoint.com/sites/itdev/"
-
 #load the contexts with the provided credentials
-$context = New-Object Microsoft.SharePoint.Client.ClientContext($Url)
+$context = New-Object Microsoft.SharePoint.Client.ClientContext($URL)
 $context.Credentials = Get-SPOCredentials $UserName $Password
 $contextDest = New-Object Microsoft.SharePoint.Client.ClientContext($UrlDest)
 $contextDest.Credentials = Get-SPOCredentials $UserName $Password
@@ -30,7 +32,7 @@ $contextDest.Credentials = Get-SPOCredentials $UserName $Password
 #get the source file
 $solutionCatalog = 121
 $web = $context.Site.RootWeb
-$file = $web.GetFileByUrl("https://potashcorp.sharepoint.com/_catalogs/solutions/Department%20Portal.wsp")
+$file = $web.GetFileByUrl($FileURL)
 $newFileBytes = $file.OpenBinaryStream()
 $context.Load($web)
 $context.Load($file)
@@ -58,7 +60,7 @@ $spoDesignPackageInfo = New-Object Microsoft.SharePoint.Client.Publishing.Design
 #explicitly specify this so we know the ID when removing other wise use: [GUID]::Empty
 $spoDesignPackageInfo.PackageGuid = "6EB6F606-8985-4A99-B49C-C007F91A9F90"
 $spoDesignPackageInfo.MajorVersion = 1
-$spoDesignPackageInfo.PackageName = "Department Portal"
+$spoDesignPackageInfo.PackageName = $FileName
 $sSolutionRelativePath = $siteDest.ServerRelativeUrl + "/_catalogs/solutions/" + $file.Name
 $sSolutionRelativePath
 
