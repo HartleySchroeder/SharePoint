@@ -50,7 +50,7 @@ $spoEMailProperties.To = $To
 $spoEMailProperties.From = "hartley.schroeder@potashcorp.com"
 $spoEMailProperties.Body = $emailBody
 $spoEMailProperties.Subject = "List of user permissions from: " + $URL
-[Microsoft.SharePoint.Client.Utilities.Utility]::SendEmail($context, $spoEMailProperties)        
+[Microsoft.SharePoint.Client.Utilities.Utility]::SendEmail($context, $spoEMailProperties)
 $context.ExecuteQuery() 
 #cleanup
 $context.Dispose()

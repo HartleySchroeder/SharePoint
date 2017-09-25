@@ -32,7 +32,7 @@ Shipping Advice:
  
 Bill Of Lading:
 
-- When filling out the form the First line is “Company Name”, this should be “Name of Carrier” as it is on the form in small print.
+- When filling out the form the First line is “Company Name”, this should be “Name of Carrier” as it is on the form in small print. - done
 - Form cannot go over one page – again eliminate lines when needed and block from going over one page.
 - Need Unique #
 - Replace Shipper Reference Number with “Bill of Lading: “ then just populate auto bill of lading number in the column.
