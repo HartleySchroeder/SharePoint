@@ -27,7 +27,8 @@ $context.ExecuteQuery()
 $emailBody = ""
 #loop through all groups
 foreach ($group in $web.SiteGroups)
-{
+{    
+    write-host $group.Title -ForegroundColor Green
     if($group -ne $null)
     {
         $emailBody = $emailBody + "<br><b>" + $group.Title + "</b><br>"
@@ -47,10 +48,10 @@ foreach ($group in $web.SiteGroups)
 $spoEMailProperties = New-Object Microsoft.SharePoint.Client.Utilities.EmailProperties
 $spoEMailProperties.To = $To
 #change the FROM to some generic email
-$spoEMailProperties.From = "hartley.schroeder@potashcorp.com"
+$spoEMailProperties.From = "no-reply@sharepointonline.com"
 $spoEMailProperties.Body = $emailBody
 $spoEMailProperties.Subject = "List of user permissions from: " + $URL
 [Microsoft.SharePoint.Client.Utilities.Utility]::SendEmail($context, $spoEMailProperties)
-$context.ExecuteQuery() 
+$context.ExecuteQuery()
 #cleanup
 $context.Dispose()
