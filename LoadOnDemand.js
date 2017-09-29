@@ -12,9 +12,6 @@
 		ddlConentType.closest('tr').hide();
 		var ddlContentTypeSel = ddlConentType.find("option:selected").text();
 		
-		var formType = $("input[title='Form Type'");
-		formType.closest('tr').hide();
-		
 		var head = document.getElementsByTagName('head')[0];
 		var js = document.createElement("script");
 		

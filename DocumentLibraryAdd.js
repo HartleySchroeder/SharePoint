@@ -1,4 +1,4 @@
-<script language="javascript" src="../SiteAssets/CommonJS/jquery.min.js" type="text/javascript"></script>
+<script language="javascript" src="https://potashcorp.sharepoint.com/sites/forms/Shipping/SiteAssets/CommonJS/jquery.min.js" type="text/javascript"></script>
 
 <button onclick="createNewDocument('SA');return false;">New Shipping Advice Allan Form</button>
 <button onclick="createNewDocument('BL');return false;">New Bill of Lading Allan Form</button>
@@ -71,7 +71,6 @@ function createNewDocument(DocType) {
 	});
 
 	function onCreateSuccess() {
-		
 		GoToPage(String.format("{0}?ID={1}&Source={2}", list.get_defaultEditFormUrl(), docItem.get_id(), "https://potashcorp.sharepoint.com/sites/forms/Shipping/AllanFormsLib/Forms/AllItems.aspx"));
 	}
 }

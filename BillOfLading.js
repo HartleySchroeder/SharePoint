@@ -60,7 +60,7 @@ $(document).ready(function () {
 	}
 	hideTableCheck();
 	
-	Autocomplete('Name of Carrier');
+	Autocomplete('To Company');
 });
 
 function PreSaveAction()
@@ -131,13 +131,9 @@ function PreSaveAction()
 		"To_x0020_Destination": $("input[title='To Destination']").val(),
 		"To_x0020_Postal_x0020_Code": $("input[title='To Postal Code']").val(),
 		"To_x0020_Route": $("input[title='To Route']").val(),
-		"From_x0020_Company": $("input[title='From Company']").val(),
-		"From_x0020_Street": $("input[title='From Street']").val(),
-		"From_x0020_Origin": $("input[title='From Origin']").val(),
 		"Vehicle_x0020_No": $("input[title='Vehicle No']").val(),
 		"Placards_x0020_Type": $("input[title='Placards Type']").val(),
 		"ERAP": $("input[title='ERAP']").val(),
-		"Individual_x0020_Certifier": $("input[title='Individual Certifier']").val(),
 		"Remit_x0020_To": $("input[title='Remit To']").val(),
 		"Remit_x0020_Address": $("input[title='Remit Address']").val(),
 		"COD_x0020_Amount": parseFloat($("input[title='COD Amount']").val()),
@@ -146,16 +142,6 @@ function PreSaveAction()
 		"Freight_x0020_Charges": $("input[title='Freight Charges']")[0].checked,
 		"Declared_x0020_Value": parseFloat($("input[title='Declared Value']").val()),
 		"Declared_x0020_Value_x0020_Par": $("input[title='Declared Value Par']").val(),
-		"Consignor": $("input[title='Consignor']").val(),
-		"Shipper_x0020_Company": $("input[title='Shipper Company']").val(),
-		"Shipper_x0020_Per": $("input[title='Shipper Per']").val(),
-		"Shipper_x0020_Date": new Date($("input[title='Shipper Date']").val()),
-		"Carrier_x0020_Company": $("input[title='Carrier Company']").val(),
-		"Carrier_x0020_Per": $("input[title='Carrier Per']").val(),
-		"Carrier_x0020_Date": new Date($("input[title='Carrier Date']").val()),
-		"Consignee_x0020_Company": $("input[title='Consignee Company']").val(),
-		"Consignee_x0020_Per": $("input[title='Consignee Per']").val(),
-		"Consignee_x0020_Date": new Date($("input[title='Consignee Date']").val()),
 		"Emergency_x0020_Phone": "",
 		"col1row1": col1Array[1],
 		"col1row2": col1Array[2],
@@ -258,7 +244,6 @@ function PreSaveAction()
 					console.log(data);
 				}
 			});
-			
 		},
 		error: function (data) {
 			console.log(data);

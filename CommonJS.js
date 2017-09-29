@@ -173,9 +173,8 @@ function Autocomplete(FormField) {
 					{
 						$("input[title='Ship Carrier']").val(addressArray[0]);
 					}
-					if(FormField == 'Name of Carrier')
+					if(FormField == 'To Company')
 					{
-						$("input[title='Name of Carrier']").val(addressArray[0]);
 						$("input[title='To Company']").val(addressArray[0]);
 						$("input[title='To Street']").val(addressArray[1]);
 						$("input[title='To Destination']").val(addressArray[2] + " " + addressArray[3] + ", " + addressArray[4]);
