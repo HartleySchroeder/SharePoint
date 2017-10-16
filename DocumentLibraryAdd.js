@@ -9,16 +9,20 @@ function createNewDocument(DocType) {
 	var waitUI = SP.UI.ModalDialog.showWaitScreenWithNoClose('Creating Document...', "Please wait, this shouldn't take long...", 100, 380);
 	var ctx = SP.ClientContext.get_current();
 	var web = ctx.get_web();
-	var list = web.get_lists().getByTitle("AllanFormsLib");
+	var list = web.get_lists().getById(_spPageContextInfo.pageListId);
 	var folder = list.get_rootFolder();
+	var libUrl = _spPageContextInfo.serverRequestPath.substr(0, _spPageContextInfo.serverRequestPath.indexOf("/Forms/"));
+	var listName = libUrl.substr(libUrl.lastIndexOf("/") + 1, libUrl.length);
+	var listURL = "https://potashcorp.sharepoint.com/sites/forms/Shipping/" + listName;
+	listName = listName.substr(0,3);
 	
 	if (DocType == 'SA')
 	{
-		var templateUrl = '/sites/forms/Shipping/AllanFormsLib/Forms/ShippingAdvice/Shipping_Advice.docx';
+		var templateUrl = libUrl + '/Forms/ShippingAdvice/Shipping_Advice.docx';
 	}
 	else if (DocType == 'BL')
 	{
-		var templateUrl = '/sites/forms/Shipping/AllanFormsLib/Forms/BillOfLading/Bill_Of_Lading.docx';
+		var templateUrl = libUrl + '/Forms/BillOfLading/Bill_Of_Lading.docx';
 	}
 	var docName;
 	var docNum;
@@ -26,7 +30,7 @@ function createNewDocument(DocType) {
 	var docFile;
 
 	$.ajax({
-		url: "https://potashcorp.sharepoint.com/sites/forms/Shipping/_api/web/lists/GetByTitle('Document Numbers')/items?$select=ID,Department,Form_x0020_Type,Number&$filter=(Department eq 'ALN') and (Form_x0020_Type eq '" + DocType + "')",
+		url: "https://potashcorp.sharepoint.com/sites/forms/Shipping/_api/web/lists/GetByTitle('Document Numbers')/items?$select=ID,Department,Form_x0020_Type,Number&$filter=(Department eq '" + listName + "') and (Form_x0020_Type eq '" + DocType + "')",
 		method: "GET",
 		headers: { "Accept": "application/json; odata=verbose" },
 		success: function (data) {
@@ -61,17 +65,21 @@ function createNewDocument(DocType) {
 					waitUI.close();
 				},
 				error: function (data) {
+					waitUI.close();
+					alert("There was an error. Please contact your administrator.");
 					console.log(data);
 				}
 			});
 		},
 		error: function (data) {
+			waitUI.close();
+			alert("There was an error. Please contact your administrator.");
 			console.log(data);
 		}
 	});
 
 	function onCreateSuccess() {
-		GoToPage(String.format("{0}?ID={1}&Source={2}", list.get_defaultEditFormUrl(), docItem.get_id(), "https://potashcorp.sharepoint.com/sites/forms/Shipping/AllanFormsLib/Forms/AllItems.aspx"));
+		GoToPage(String.format("{0}?ID={1}&Source={2}", list.get_defaultEditFormUrl(), docItem.get_id(), listURL));
 	}
 }
 
