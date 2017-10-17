@@ -1,7 +1,7 @@
 <script language="javascript" src="https://potashcorp.sharepoint.com/sites/forms/Shipping/SiteAssets/CommonJS/jquery.min.js" type="text/javascript"></script>
 
-<button onclick="createNewDocument('SA');return false;">New Shipping Advice Allan Form</button>
-<button onclick="createNewDocument('BL');return false;">New Bill of Lading Allan Form</button>
+<button onclick="createNewDocument('SA');return false;">New Shipping Advice Form</button>
+<button onclick="createNewDocument('BL');return false;">New Bill of Lading Form</button>
 
 <script type="text/javascript">
 
