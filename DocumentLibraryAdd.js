@@ -1,4 +1,4 @@
-<script language="javascript" src="https://potashcorp.sharepoint.com/sites/forms/Shipping/SiteAssets/CommonJS/jquery.min.js" type="text/javascript"></script>
+<script language="javascript" src="../../SiteAssets/CommonJS/jquery.min.js" type="text/javascript"></script>
 
 <button onclick="createNewDocument('SA');return false;">New Shipping Advice Form</button>
 <button onclick="createNewDocument('BL');return false;">New Bill of Lading Form</button>
@@ -13,7 +13,7 @@ function createNewDocument(DocType) {
 	var folder = list.get_rootFolder();
 	var libUrl = _spPageContextInfo.serverRequestPath.substr(0, _spPageContextInfo.serverRequestPath.indexOf("/Forms/"));
 	var listName = libUrl.substr(libUrl.lastIndexOf("/") + 1, libUrl.length);
-	var listURL = "https://potashcorp.sharepoint.com/sites/forms/Shipping/" + listName;
+	var listURL = _spPageContextInfo.webAbsoluteUrl + "/" + listName;
 	listName = listName.substr(0,3);
 	
 	if (DocType == 'SA')
@@ -30,7 +30,7 @@ function createNewDocument(DocType) {
 	var docFile;
 
 	$.ajax({
-		url: "https://potashcorp.sharepoint.com/sites/forms/Shipping/_api/web/lists/GetByTitle('Document Numbers')/items?$select=ID,Department,Form_x0020_Type,Number&$filter=(Department eq '" + listName + "') and (Form_x0020_Type eq '" + DocType + "')",
+		url: _spPageContextInfo.webAbsoluteUrl + "/_api/web/lists/GetByTitle('Document Numbers')/items?$select=ID,Department,Form_x0020_Type,Number&$filter=(Department eq '" + listName + "') and (Form_x0020_Type eq '" + DocType + "')",
 		method: "GET",
 		headers: { "Accept": "application/json; odata=verbose" },
 		success: function (data) {

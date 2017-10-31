@@ -206,7 +206,7 @@ function PreSaveAction()
 	var queryID = regID.exec(window.location.href);
 
 	$.ajax({
-		url: "https://potashcorp.sharepoint.com/sites/forms/Shipping/_api/web/lists/GetById('" + _spPageContextInfo.pageListId + "')/items?$filter=(ID eq '" + queryID[1] + "')",
+		url: _spPageContextInfo.webAbsoluteUrl + "/_api/web/lists/GetById('" + _spPageContextInfo.pageListId + "')/items?$filter=(ID eq '" + queryID[1] + "')",
 		method: "GET",
 		headers: { "Accept": "application/json; odata=verbose" },
 		success: function (data) {
@@ -282,7 +282,7 @@ function PreSaveAction()
 				success: function (data) {
 					var libUrl = _spPageContextInfo.serverRequestPath.substr(0, _spPageContextInfo.serverRequestPath.indexOf("/Forms/"));
 					var listName = libUrl.substr(libUrl.lastIndexOf("/") + 1, libUrl.length);
-					var listURL = "https://potashcorp.sharepoint.com/sites/forms/Shipping/" + listName;
+					var listURL = _spPageContextInfo.webAbsoluteUrl + "/" + listName;
 					GoToPage(listURL);
 				},
 				error: function (data) {

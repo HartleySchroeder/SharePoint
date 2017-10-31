@@ -80,6 +80,11 @@ function addDetailRow(Detail, rows)
 
 function Autocomplete(FormField) {
 
+	var libUrl = _spPageContextInfo.serverRequestPath.substr(0, _spPageContextInfo.serverRequestPath.indexOf("/Forms/"));
+	var listName = libUrl.substr(libUrl.lastIndexOf("/") + 1, libUrl.length);
+	var listURL = _spPageContextInfo.webAbsoluteUrl + "/" + listName;
+	listName = listName.substr(0,3);
+
 	var txtFormField = $("input[Title='" + FormField + "']");
 	
 	txtFormField.css("position", "");
@@ -108,11 +113,15 @@ function Autocomplete(FormField) {
 
 		if(FormField == "Ship Carrier")
 		{
-			url = "https://potashcorp.sharepoint.com/sites/forms/Shipping/_api/web/lists/GetByTitle('Carriers')/items?$filter=startswith(Title, '" + textInput + "')";
+			url = _spPageContextInfo.webAbsoluteUrl + "/_api/web/lists/GetByTitle('Carriers')/items?$filter=startswith(Title, '" + textInput + "')";
+		}
+		else if(FormField == "Name of Carrier")
+		{
+			url = _spPageContextInfo.webAbsoluteUrl + "/_api/web/lists/GetByTitle('Carriers')/items?$filter=startswith(Title, '" + textInput + "')";
 		}
 		else
 		{
-			url = "https://potashcorp.sharepoint.com/sites/forms/Shipping/_api/web/lists/GetByTitle('Vendors')/items?$filter=startswith(Name, '" + textInput + "') and OperatingUnit eq 'ALN OU'";
+			url = _spPageContextInfo.webAbsoluteUrl + "/_api/web/lists/GetByTitle('Vendors')/items?$filter=startswith(Name, '" + textInput + "') and OperatingUnit eq '" + listName + " OU'";
 		}
 		
 		$.ajax({
@@ -123,7 +132,7 @@ function Autocomplete(FormField) {
 
 				var items = data.d.results;
 
-				if(FormField == "Ship Carrier")
+				if(FormField == "Ship Carrier" || FormField == "Name of Carrier")
 				{
 					for(var i = 0; i < items.length; i++)
 					{
@@ -160,19 +169,26 @@ function Autocomplete(FormField) {
 					
 					var dispListItem = $(this).data('value');
 
-					if(FormField != "Ship Carrier")
-					{
-						dispListItem = dispListItem.substr(dispListItem.indexOf(";") + 1, dispListItem.length);
-					}
 					var addressArray = dispListItem.split(";");
-					if(FormField == 'Vendor')
-					{
-						$("textarea[title='Ship To']").val(addressArray[0] + "\n" + addressArray[1] + "\n" + addressArray[2] + " " + addressArray[3] + "\n" + addressArray[4] + "\n" + addressArray[5]);
-					}
+
 					if(FormField == 'Ship Carrier')
 					{
 						$("input[title='Ship Carrier']").val(addressArray[0]);
 					}
+					if(FormField == 'Name of Carrier')
+					{
+						$("input[title='Name of Carrier']").val(addressArray[0]);
+					}
+
+					dispListItem = dispListItem.substr(dispListItem.indexOf(";") + 1, dispListItem.length);
+					addressArray = dispListItem.split(";");
+
+					if(FormField == 'Vendor')
+					{
+						$("textarea[title='Ship To']").val(addressArray[0] + "\n" + addressArray[1] + "\n" + addressArray[2] + " " + addressArray[3] + "\n" + addressArray[4] + "\n" + addressArray[5]);
+						txtFormField.val(addressArray[0]);
+					}
+					
 					if(FormField == 'To Company')
 					{
 						$("input[title='To Company']").val(addressArray[0]);
@@ -180,8 +196,6 @@ function Autocomplete(FormField) {
 						$("input[title='To Destination']").val(addressArray[2] + " " + addressArray[3] + ", " + addressArray[4]);
 						$("input[title='To Postal Code']").val(addressArray[5]);
 					}
-					
-					txtFormField.val(addressArray[0]);
 										
 				}).mouseover(function() {
 					var aY = {

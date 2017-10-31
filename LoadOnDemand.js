@@ -96,7 +96,7 @@
 		listName = listName.substr(0,3);
 
 		$.ajax({
-			url: "https://potashcorp.sharepoint.com/sites/forms/Shipping/_api/web/lists/GetByTitle('Document Numbers')/items?$select=From_x0020_Company,From_x0020_Origin,From_x0020_Phone,From_x0020_Street&$filter=(Department eq '" + listName + "') and (Form_x0020_Type eq 'SA')",
+			url: _spPageContextInfo.webAbsoluteUrl + "/_api/web/lists/GetByTitle('Document Numbers')/items?$select=From_x0020_Company,From_x0020_Origin,From_x0020_Phone,From_x0020_Street&$filter=(Department eq '" + listName + "') and (Form_x0020_Type eq 'SA')",
 			method: "GET",
 			headers: { "Accept": "application/json; odata=verbose" },
 			success: function (data) {
