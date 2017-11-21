@@ -12,10 +12,8 @@
 #Add-PnPWebPartToWebPartPage -ServerRelativePageUrl "/sites/forms/Shipping/ALNforms/Forms/Bill%20of%20Lading.aspx" -Path "C:\Dev\SharePoint\ContentEditorView.dwp" -ZoneId "Main" -ZoneIndex 0
 #Add-PnPWebPartToWebPartPage -ServerRelativePageUrl "/sites/forms/Shipping/ALNforms/Forms/Shipping%20Advice.aspx" -Path "C:\Dev\SharePoint\ContentEditorView.dwp" -ZoneId "Main" -ZoneIndex 0
 
-
-
-
-
+#http://cmbdemo.canadacentral.cloudapp.azure.com/_vti_bin/ExcelRest.aspx/Shared%20Documents/2015-oct-mcfs.xlsx/model/Ranges('A17%7Cbt117')?$format=atom
+#Register-SPWorkflowService -SPSite http://uat.collaboration.mbgov.ca -WorkflowHostUri https://mbpapp1059u.shared.mbgov.ca:12290 -AllowOAuthHttp
 
 $Url = "https://potashcorp.sharepoint.com/sites/forms/Shipping"
 $ListTemplateInternalName = "ShippingForms.stp"
