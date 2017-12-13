@@ -1,10 +1,15 @@
+var promises = [];
+var countInvoices = 0;
+
 function uploadItems() {
-    var waitUI = SP.UI.ModalDialog.showWaitScreenWithNoClose('Uploading items...', "Please wait, this shouldn't take long...", 100, 380);
     var item = [];
-    var lowerRange = 18;
-    var upperRange = 118;
+    var lowerRange = 1;
+    var upperRange = 101;
     var checkData = "";
     var invoices = [];
+    var countDone = 0;
+
+    var waitUI = SP.UI.ModalDialog.showWaitScreenWithNoClose('Uploading items...', "Please wait, this shouldn't take long...", 100, 380);
 
     $.ajax({
         url: _spPageContextInfo.webAbsoluteUrl + "/_api/web/lists/getByTitle('Documents')/items?$top=100&$select=FileLeafRef",
@@ -12,7 +17,7 @@ function uploadItems() {
         headers: { "accept": "application/json;odata=verbose" },
         success: function(data) {
             data.d.results.forEach(function(invoice){
-                uploadLoop(encodeURIComponent(invoice.FileLeafRef), lowerRange, upperRange, waitUI);
+                uploadLoop(encodeURIComponent(invoice.FileLeafRef), lowerRange, upperRange, waitUI, data.d.results.length);
             });
         },
         error: function(data){
@@ -21,27 +26,41 @@ function uploadItems() {
     });
 }
 
-function uploadLoop(invoice, lowerRange, upperRange, waitUI)
+function checkDone(waitUI, numOfFiles)
 {
-    var k;
-    $.ajax({
+    if (numOfFiles == countInvoices)
+    {
+        $.when.apply($, promises).always(function() {
+            console.log("Done");
+            waitUI.close(0);
+            waitUI = null;
+            alert("Done");
+            //GoToPage(_spPageContextInfo.webAbsoluteUrl + "/lists/CMBimport")
+        });
+    }
+}
+
+function uploadLoop(invoice, lowerRange, upperRange, waitUI, numOfFiles)
+{
+    promises.push($.ajax({
         url: _spPageContextInfo.webAbsoluteUrl + "/_vti_bin/ExcelRest.aspx/Shared%20Documents/" + invoice + "/model/Ranges('A" + lowerRange + "%7Cbt" + upperRange + "')?$format=json",
         method: "GET",
         headers: { "Accept": "application/json; odata=verbose" },
         success: function (data) {
             var parsed = JSON.parse(data);
-            for(k = 0; k <= parsed.rows.length-1; k++)
+            
+            for(var k = 0; k <= parsed.rows.length-1; k++)
             {
                 var checkDataLoop = (typeof parsed.rows[k][0].fv == 'undefined') ? parsed.rows[k][0].v : parsed.rows[k][0].fv;
 
                 if (typeof checkDataLoop != 'undefined')
                 {
-                    item = {
+                    var item = {
                         "__metadata": { "type": "SP.Data.CMBimportListItem" },
                         "InvoiceName": (typeof parsed.rows[k][0].fv == 'undefined') ? parsed.rows[k][0].v : parsed.rows[k][0].fv,
                         "Agency": (typeof parsed.rows[k][1].fv == 'undefined') ? parsed.rows[k][1].v : parsed.rows[k][1].fv,
-                        "Invoice_x0020_Line_x0020__x0023_": (typeof parsed.rows[k][2].fv == 'undefined') ? parsed.rows[k][2].v.toString() : parsed.rows[k][2].fv.toString(),
-                        "Agency_x0020_Child_x0020_ID": (typeof parsed.rows[k][3].fv == 'undefined') ? parsed.rows[k][3].v.toString() : parsed.rows[k][3].fv.toString(),
+                        "Invoice_x0020_Line_x0020__x0023_": (typeof parsed.rows[k][2].fv == 'undefined') ? parsed.rows[k][2].v : parsed.rows[k][2].fv,
+                        "Agency_x0020_Child_x0020_ID": (typeof parsed.rows[k][3].fv == 'undefined') ? parsed.rows[k][3].v : parsed.rows[k][3].fv,
                         "Child_x0020_Last_x0020_Name": (typeof parsed.rows[k][4].fv == 'undefined') ? parsed.rows[k][4].v : parsed.rows[k][4].fv,
                         "Child_x0020_First_x0020_name": (typeof parsed.rows[k][5].fv == 'undefined') ? parsed.rows[k][5].v : parsed.rows[k][5].fv,
                         "Child_x0020_Date_x0020_of_x0020_": (typeof parsed.rows[k][6].fv == 'undefined') ? parsed.rows[k][6].v : parsed.rows[k][6].fv,
@@ -49,7 +68,7 @@ function uploadLoop(invoice, lowerRange, upperRange, waitUI)
                         "Legal_x0020_Status_x000a_APPRE_x": (typeof parsed.rows[k][8].fv == 'undefined') ? parsed.rows[k][8].v : parsed.rows[k][8].fv,
                         "Jurisdiction": (typeof parsed.rows[k][9].fv == 'undefined') ? parsed.rows[k][9].v : parsed.rows[k][9].fv,
                         "Gender": (typeof parsed.rows[k][10].fv == 'undefined') ? parsed.rows[k][10].v : parsed.rows[k][10].fv,
-                        "Treaty_x0020_#": (typeof parsed.rows[k][11].fv == 'undefined') ? parsed.rows[k][11].v : parsed.rows[k][11].fv,
+                        "Treaty_x0020__x0023_": (typeof parsed.rows[k][11].fv == 'undefined') ? parsed.rows[k][11].v : parsed.rows[k][11].fv,
                         "Placement_x0020_Type_x0020_": (typeof parsed.rows[k][12].fv == 'undefined') ? parsed.rows[k][12].v : parsed.rows[k][12].fv,
                         "Placement_x0020_Name": (typeof parsed.rows[k][13].fv == 'undefined') ? parsed.rows[k][13].v : parsed.rows[k][13].fv,
                         "Agency_x0020_Placement_x0020_ID": (typeof parsed.rows[k][14].fv == 'undefined') ? parsed.rows[k][14].v : parsed.rows[k][14].fv,
@@ -111,12 +130,12 @@ function uploadLoop(invoice, lowerRange, upperRange, waitUI)
                         "Exceptional_x0020_Circumstance_x": getVal(parsed.rows[k][69].fv, parsed.rows[k][69].v),
                         "Independent_x0020_Living_x0020_C": getVal(parsed.rows[k][70].fv, parsed.rows[k][70].v),
                         "Other_x0020_Special_x0020_Needs_": (typeof parsed.rows[k][71].fv == 'undefined') ? parsed.rows[k][71].v : parsed.rows[k][71].fv
-                    }
+                    };
 
                     console.log(item);
-
-                    $.ajax({
-                        url: _spPageContextInfo.siteAbsoluteUrl + "/_api/web/lists/getbytitle('CMBimport')/items",
+                    
+                    promises.push($.ajax({
+                        url: _spPageContextInfo.webAbsoluteUrl + "/_api/web/lists/getbytitle('CMBimport')/items",
                         type: "POST",
                         contentType: "application/json;odata=verbose",
                         data: JSON.stringify(item),
@@ -128,37 +147,56 @@ function uploadLoop(invoice, lowerRange, upperRange, waitUI)
                             
                         },
                         error: function (data) {
-                            console.log(data);
+                            var parsedRequest = JSON.parse(this.data);
+                            var errorItem = {
+                                "__metadata": { "type": "SP.Data.CMBtestListItem" },
+                                "InvoiceName": parsedRequest.InvoiceName,
+                                "InvoiceLine": parsedRequest.Invoice_x0020_Line_x0020__x0023_
+                            }
+                            
+                            promises.push($.ajax({
+                                url: _spPageContextInfo.webAbsoluteUrl + "/_api/web/lists/getbytitle('CMBtest')/items",
+                                type: "POST",
+                                contentType: "application/json;odata=verbose",
+                                data: JSON.stringify(errorItem),
+                                headers: {
+                                    "Accept": "application/json;odata=verbose",
+                                    "X-RequestDigest": $("#__REQUESTDIGEST").val()
+                                },
+                                success: function (data) {
+                                    
+                                },
+                                error: function (data) {
+                                    console.log(data);
+                                }
+                            }));
                         }
-                    });
+                    }));
 
                     console.log(k);
                     if (k == 100)
                     {
                         lowerRange = upperRange + 1;
                         upperRange = upperRange + 101;
-                        uploadLoop(invoice, lowerRange, upperRange, waitUI);
+                        uploadLoop(invoice, lowerRange, upperRange, waitUI, numOfFiles);
                     }
                 }
-                else
+                else if(typeof checkDataLoop == 'undefined' && k == 100)
                 {
-                    if (waitUI != null)
-                    {
-                        waitUI.close();
-                        waitUI = null;
-                    }
+                    countInvoices = countInvoices + 1;
+                    checkDone(waitUI, numOfFiles);
                 }
             }
         },
         error: function (data) {
             console.log(data);
         }
-    });
+    }));
 }
 
 function getVal(val1, val2)
 {
-    var value;
+    var value, orginalVal;
     if (typeof val1 == 'undefined')
     {
         value = val2;
@@ -167,14 +205,24 @@ function getVal(val1, val2)
     {
         value = val1;
     }
-
+    orginalVal = value;
     if (typeof value != 'undefined')
     {
-        value = Number(value.replace(/[^0-9\.-]+/g,""));
-    }
-    if (isNaN(value))
-    {
-        value = 0;
+        if(value == ' $-   ')
+        {
+            value = 0;
+        }
+        else
+        {
+            //value = Number(value.replace("$","").replace(",","").replace("(","").replace(")",""));
+            value = Number(value.replace("$","").replace(",",""));
+
+            if (isNaN(value))
+            {
+                value = orginalVal;
+            }
+        }
+        
     }
 
     return value;
